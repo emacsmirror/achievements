@@ -149,8 +149,8 @@
                   ;; TODO: I _think_ this is right for .emacs
                   (file-exists-p (concat user-init-file ".elc"))))
 
-(defachievement "Byte-compiled out of date"
-  "Your .emacs is byte-compiled."
+(defachievement "Last Year's Model"
+  "Your byte-compiled .emacs is out of date."
   :predicate '(cond ((file-exists-p (concat user-init-file "c"))
                      (file-newer-than-file-p
                       user-init-file
