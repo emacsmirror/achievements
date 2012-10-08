@@ -45,7 +45,7 @@
   (name nil :read-only t)
   description
   (points 5)
-  (predicate nil :read-only t) ;; t if satisfied, nil if opted out, otherwise a function which should return non-nil on success
+  predicate ;; t if satisfied, nil if opted out, otherwise a function which should return non-nil on success
   transient ;; if non-nil then results won't be saved, but constantly re-evaluated.
   (min-score 0)
   )
