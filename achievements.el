@@ -105,7 +105,7 @@
                  if (member (car com) command-list)
                  do (setq total (+ total (cdr com))))
            total))
-        (t nil)))
+        (t 0)))
 
 (defun achievements-command-was-run (command)
   "Return non-nil if COMMAND has been run.
