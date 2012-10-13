@@ -57,8 +57,10 @@
                    `(make-achievement ,name nil ,@body)
                    )
                 t
-                ;; compare function
-                ))
+                ;; We compare by name only, since the predicate will often be different
+                (lambda (a b)
+                  (equal (emacs-achievement-name a)
+                         (emacs-achievement-name b)))))
 
 (defmacro defcommand-achievements (format-str body &rest arguments)
   (cons 'progn
