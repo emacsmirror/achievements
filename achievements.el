@@ -91,13 +91,18 @@
 ;;{{{ Testing achievements
 
 (defun achievements-variable-was-set (var)
-  "Return non-nil if VAR has been set in customize or .emacs"
+  "If VAR is a cons, return non-nil if (car VAR) is equal to (cdr VAR).
+If VAR is a symbol, return non-nil if VAR has been set in
+customize or .emacs (not yet implemented)."
   (if (listp var)
-      (equal (symbol-value (car var)) (cdr var))
+      (equal (symbol-value (car var)) (cadr var))
     ;; it was set via customize etc.
     ))
 
 (defun achievements-num-times-commands-were-run (command-list)
+  "Return the number of times any one of the commands was run.
+Right now this is checked it `command-frequency', but it is hoped
+that in the future there will be other methods."
   (cond ((require 'command-frequency nil t)
          (let ((command-freq (cdr (command-frequency-list)))
                (total 0))
@@ -128,15 +133,16 @@ symbol for a command which must be."
       (>= (achievements-num-times-commands-were-run
            (if (listp (car command)) (car command) (list (car command))))
           (cdr command)))
-
      ;; A list of commands that are AND-ed
      ((or (symbolp (car-safe command))
           (numberp (cdr-safe (car-safe command))))
       (every 'achievements-command-was-run command))
+     ;; Otherwise it's a list of commands, any of which could be run
      (t
       (>= (achievements-num-times-commands-were-run
            (car command))
           1)))))
+
 ;;}}}
 ;;{{{ Display
 
