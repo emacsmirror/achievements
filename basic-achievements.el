@@ -7,7 +7,8 @@
 (defachievement "Not All There"
   "You have a fractional achievement score."
   ;; Note: This is meant to be the only one that has fractional score
-  :points .5)
+  :points .5
+  :predicate '(/= achievement-score (round achievement-score)))
 
 (defachievement "Unlocker"
   "You have earned over 50 points in Emacs achievements.  Not bad."

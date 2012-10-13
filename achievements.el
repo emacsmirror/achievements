@@ -147,15 +147,20 @@ symbol for a command which must be."
 ;;{{{ Display
 
 (defun achievements-update-score ()
-  (setq achievement-score 0)
-  (dolist (achievement achievements-list)
-    (let ((pred (emacs-achievement-predicate achievement)))
-      (when (achievements-earned-p achievement)
-        (setq achievement-score (+ achievement-score
-                                   (emacs-achievement-points achievement)))
-        (unless (emacs-achievement-transient achievement)
-          (setf (emacs-achievement-predicate achievement) t)))))
-  achievement-score)
+  (let ((score 0)
+        (total 0))
+    (dolist (achievement achievements-list)
+      (let ((points (emacs-achievement-points achievement))
+            (pred (emacs-achievement-predicate achievement)))
+        (incf total points)
+        (when (achievements-earned-p achievement)
+          (incf achievement-score points)
+          (unless (emacs-achievement-transient achievement)
+            (setf (emacs-achievement-predicate achievement) t)))))
+  ;; Save the updated list of achievements
+  (achievement-save-achievements)
+  (setq achievement-total total)
+  (setq achievement-score score)))
 
 (defun achievements-earned-p (achievement)
   "Returns non-nil if the achievement is earned."
