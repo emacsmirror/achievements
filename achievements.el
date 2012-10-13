@@ -22,7 +22,7 @@
                          ;; &optional (predicate t)
                          &key
                          ;; slots
-                         points transient min-score predicate
+                         points transient min-score predicate unlocks
                          ;; convenience
                          package variable command
                          &aux (predicate
@@ -44,10 +44,11 @@
 
   (name nil :read-only t)
   description
-  (points 5)
   predicate ;; t if satisfied, nil if opted out, otherwise a function which should return non-nil on success
   transient ;; if non-nil then results won't be saved, but constantly re-evaluated.
+  (points 5)
   (min-score 0)
+  unlocks
   )
 
 (defmacro defachievement (name &rest body)
