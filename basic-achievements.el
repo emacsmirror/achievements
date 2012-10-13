@@ -68,45 +68,6 @@
      where-is) "What happens when I do this?")
    (describe-syntax "When is a word not a word?")
    ((command-history view-lossage) "What did I just do?")))
-(progn
-  (defachievement
-    (quote apropos-documentation)
-    "You answered a question by using `I know I read it somewhere'." :command
-    (function apropos-documentation))
-  (defachievement
-    (quote apropos)
-    "You answered a question by using `Apropos of Nothing'." :command
-    (function apropos))
-  (defachievement
-    (quote apropos-value)
-    "You answered a question by using `Answer in search of a question'." :command
-    (function apropos-value))
-  (defachievement
-    (quote describe-bindings)
-    "You answered a question by using `What to type?'." :command
-    (function describe-bindings))
-  (defachievement
-    (quote
-     (describe-function Info-goto-emacs-command-node info-lookup-symbol describe-variable describe-mode))
-    "You answered a question by using `What does this do?'." :command
-    (function
-     (describe-function Info-goto-emacs-command-node info-lookup-symbol describe-variable describe-mode)))
-  (defachievement
-    (quote
-     (describe-key describe-key-briefly Info-goto-emacs-key-command-node where-is))
-    "You answered a question by using `What happens when I do this?'." :command
-    (function
-     (describe-key describe-key-briefly Info-goto-emacs-key-command-node where-is)))
-  (defachievement
-    (quote describe-syntax)
-    "You answered a question by using `When is a word not a word?'." :command
-    (function describe-syntax))
-  (defachievement
-    (quote
-     (command-history view-lossage))
-    "You answered a question by using `What did I just do?'." :command
-    (function
-     (command-history view-lossage))))
 
 (defachievement "Shortcut genius"
   "You don't need to learn new shortcuts anymore."
