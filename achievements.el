@@ -6,12 +6,68 @@
 
 (require 'cl)
 
+(defconst achievements-file
+  (expand-file-name ".achievements" user-emacs-directory)
+  "File to store the achievements in.")
+
 (defvar achievements-list nil
   "List of all possible achievements.")
 
 (defvar achievement-score 0
   "Score of all earned achievements.")
 
+(defvar achievement-total 0
+  "Highest possible score of all unlocked achievements.")
+
+(defcustom achievements-debug nil
+  "If non-nil, various debug messages will be printed regarding achievements activity."
+  :type 'bool
+  :group 'achievements)
+
+;;{{{ Persistence & startup
+
+(defun achievements-save-achievements ()
+  "Saves achievements to a super secret file."
+  (interactive)
+  (with-temp-file achievements-file
+    (prin1 achievements-list (current-buffer))))
+
+(defun achievements-load-achievements ()
+  "Load achievements from a super secret file.
+This overwrites `achievements-list'."
+  (interactive)
+  (setq achievements-list
+        (when (file-exists-p achievements-file)
+          ;; Load sexp
+          (let* ((l (condition-case nil
+                        (with-temp-buffer
+                          (insert-file-contents achievements-file)
+                          (goto-char (point-min))
+                          (read (current-buffer)))
+                      ;; Catch empty file i.e., end of file during parsing
+                      (error nil)))
+                 (ll (and (listp l) l)))
+            ;; Was it valid sexp?
+            (and achievements-debug
+                 (null ll)
+                 (message "File %s does not contain valid data"
+                          achievements-file))
+            ll))))
+
+;; Set up hooks and initialization
+;;;###autoload
+(defun achievements-init ()
+  "Initialize achievements package."
+  (when (null achievements-list)
+    (achievements-load-achievements))
+  (add-hook 'kill-emacs-hook #'achievements-save-achievements))
+
+;; Set things up before we load any achievements files, otherwise the
+;; definitions will populate achievements-list instead of the saved
+;; values.
+(achievements-init)
+
+;;}}}
 ;;{{{ Defining achievements
 
 (defstruct
