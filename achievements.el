@@ -1,6 +1,23 @@
+;;; achievements.el --- achievements for emacs usage
 
-;; TODO: Documentation
-;; TODO: Make it persistent by saving to a file
+;; Author: Ivan Andrus <darthandrus@gmail.com>
+;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
+;; Created: 2012-10-07
+;; Keywords: games
+
+;;; Install:
+
+;; A simple (require 'achievements).  However, currently it is also
+;; highly recommended to install the command-frequency package in
+;; order to get all the functionality.
+
+;;; Commentary:
+
+;; Running `achievements-list-achievements' will show a list of all
+;; unlocked achievements.
+
+;;; Code:
+
 ;; TODO: Make an `unlocks' attribute so that using org-mode will (require 'org-achievements)
 ;; TODO: easy way to show a random unearned achievement, perhaps on an idle timer
 
@@ -252,3 +269,5 @@ symbol for a command which must be."
 (require 'basic-achievements)
 
 (provide 'achievements)
+
+;;; achievements.el ends here

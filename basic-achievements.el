@@ -1,3 +1,17 @@
+;;; basic-achievements.el --- Some basic achievements
+
+;; Author: Ivan Andrus <darthandrus@gmail.com>
+;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
+;; Created: 2012-10-07
+;; Keywords: games
+
+;;; Commentary:
+
+;; This is the main entry point for achievement defintions.  Other
+;; files can be included from here using the `:unlocks' slot.
+
+;;; Code:
+
 ;;{{{ meta
 
 (defachievement "Achiever"
@@ -172,7 +186,7 @@
   :min-score 100)
 
 ;;}}}
-;;{{{ uptimes
+;;{{{ Uptimes
 
 (defachievement "Pretty Stable"
   "You have an uptime of over 1 day."
@@ -354,3 +368,5 @@
 ;;}}}
 
 (provide 'basic-achievements)
+
+;;; basic-achievements.el ends here
