@@ -138,15 +138,15 @@ This overwrites `achievements-list'."
 
 (defmacro defcommand-achievements (format-str body &rest arguments)
   (cons 'progn
-       (loop for achiev in body
-             collect (append
-                      (list 'defachievement
-                            (cadr achiev)
-                            (format format-str
-                                    (car achiev)
-                                    (cddr achiev))
-                            :command (list 'function (car achiev)))
-                      arguments))))
+        (loop for achiev in body
+              collect (append
+                       (list 'defachievement
+                             (cadr achiev)
+                             (format format-str
+                                     (car achiev)
+                                     (cddr achiev))
+                             :command (list 'function (car achiev)))
+                       arguments))))
 
 (defmacro defvalue-achievements (var format-str body &rest arguments)
   (cons 'progn
@@ -232,10 +232,10 @@ symbol for a command which must be."
           (incf score points)
           (unless (emacs-achievement-transient achievement)
             (setf (emacs-achievement-predicate achievement) t)))))
-  ;; Save the updated list of achievements
-  (achievements-save-achievements)
-  (setq achievement-total total)
-  (setq achievement-score score)))
+    ;; Save the updated list of achievements
+    (achievements-save-achievements)
+    (setq achievement-total total)
+    (setq achievement-score score)))
 
 (defun achievements-earned-p (achievement)
   "Returns non-nil if the achievement is earned."
@@ -255,14 +255,14 @@ symbol for a command which must be."
     (let ((pred (emacs-achievement-predicate achievement)))
       (when (>= achievement-score
                 (emacs-achievement-min-score achievement))
-          (insert (format "%s %20s | %s\n"
-                      (cond ((eq pred nil) ":-|")
-                            ((eq pred t) ":-)")
-                            ((listp pred)
-                             (if (funcall pred) ":-)" ":-("))
-                            (t ":-?"))
-                      (emacs-achievement-name achievement)
-                      (emacs-achievement-description achievement)))))))
+        (insert (format "%s %20s | %s\n"
+                        (cond ((eq pred nil) ":-|")
+                              ((eq pred t) ":-)")
+                              ((listp pred)
+                               (if (funcall pred) ":-)" ":-("))
+                              (t ":-?"))
+                        (emacs-achievement-name achievement)
+                        (emacs-achievement-description achievement)))))))
 
 ;;}}}
 
