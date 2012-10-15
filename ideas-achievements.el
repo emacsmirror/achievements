@@ -85,7 +85,7 @@ debug-on-error
 debug-on-quit
 eval-last-sexp twice to get hex numbers
 ert
-disass
+disassemble
 
 ;;}}}
 ;;{{{ Modes
@@ -188,22 +188,6 @@ which-func-mode
 
 (defachievement ""
   "You have used smerge-mode to resolve conflicts.")
-
-;;}}}
-;;{{{ Forbidden fruits -- disabled functions
-
-;; (put 'narrow-to-region 'disabled nil)
-
-(defachievement ""
-  "You have used recursive editing.")
-
-(defachievement "Narrow minded"
-  "You have used narrowing.")
-
-;; Find all disabled commands
-
-(loop for s being the symbols
-      when (get s 'disabled) collect s)
 
 ;;}}}
 ;;{{{ Editing
@@ -311,7 +295,6 @@ type-break-mode
 enriched-mode
 command-history
 view-lossage
-elint
 flymake
 proced
 re-builder

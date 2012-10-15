@@ -26,11 +26,12 @@
 
 (defachievement "Unlocker"
   "You have earned over 50 points in Emacs achievements.  Not bad."
-  :predicate '(> achievement-score 50))
+  :predicate '(>= achievement-score 50)
+  :unlocks 'advanced-achievements)
 
 (defachievement "Over Achiever"
   "You have earned 500 points in Emacs achievements.  Don't you have some real work to do?"
-  :predicate '(> achievement-score 500))
+  :predicate '(>= achievement-score 500))
 
 (defachievement "Cheater"
   "You have earned all Emacs achievements.  Actually that's impossible."

@@ -18,7 +18,6 @@
 
 ;;; Code:
 
-;; TODO: Make an `unlocks' attribute so that using org-mode will (require 'org-achievements)
 ;; TODO: easy way to show a random unearned achievement, perhaps on an idle timer
 
 (require 'cl)
@@ -230,6 +229,8 @@ symbol for a command which must be."
         (incf total points)
         (when (achievements-earned-p achievement)
           (incf score points)
+          (when (emacs-achievement-unlocks achievement)
+            (require (emacs-achievement-unlocks achievement) nil t))
           (unless (emacs-achievement-transient achievement)
             (setf (emacs-achievement-predicate achievement) t)))))
     ;; Save the updated list of achievements
