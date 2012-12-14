@@ -45,8 +45,10 @@
 (defun achievements-save-achievements ()
   "Saves achievements to a super secret file."
   (interactive)
-  (with-temp-file achievements-file
-    (prin1 achievements-list (current-buffer))))
+  (let ((print-level nil)
+        (print-length nil))
+    (with-temp-file achievements-file
+      (prin1 achievements-list (current-buffer)))))
 
 (defun achievements-load-achievements ()
   "Load achievements from a super secret file.
