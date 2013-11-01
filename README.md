@@ -25,3 +25,7 @@ about
 A few days ago I started thinking about achievements.el again.  I
 couldn't stop thinking about it, and sometimes the only way for me to
 move on is to start working on it.  So there you have it.
+
+There is also another similar project
+[achievements-mode](https://github.com/Fuco1/achievements-mode).  We
+are hoping the two will be merged at some point.
