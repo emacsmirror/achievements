@@ -251,6 +251,9 @@ symbol for a command which must be."
           (when (emacs-achievement-unlocks achievement)
             (require (emacs-achievement-unlocks achievement) nil t))
           (unless (emacs-achievement-transient achievement)
+            (when (and achievements-display-when-earned
+                       (not (equal (emacs-achievement-predicate achievement) t)))
+              (message "You earned the %s achievement!" (emacs-achievement-name achievement)))
             (setf (emacs-achievement-predicate achievement) t)))))
     ;; Save the updated list of achievements
     (achievements-save-achievements)
@@ -283,6 +286,32 @@ symbol for a command which must be."
                               (t ":-?"))
                         (emacs-achievement-name achievement)
                         (emacs-achievement-description achievement)))))))
+
+;;}}}
+;;{{{ Achievements Mode
+
+(defvar achievements-timer nil
+  "Holds the idle timer.")
+
+(defcustom achievements-display-when-earned t
+  "If non-nil, various debug messages will be printed regarding achievements activity."
+  :type 'bool
+  :group 'achievements)
+
+(defcustom achievements-idle-time 10
+  "Number of seconds for Emacs to be idle before checking if achievements have been earned."
+  :type 'numberp
+  :group 'achievements)
+
+(define-minor-mode achievements-mode
+  "Turns on automatic earning of achievements when idle."
+  ;; The lighter is a trophy
+  nil " 🏆" nil
+  (if achievements-mode
+      (unless achievements-timer
+        (setq achievements-timer
+              (run-with-idle-timer achievements-idle-time t #'achievements-update-score)))
+    (setq achievements-timer (cancel-timer achievements-timer))))
 
 ;;}}}
 
