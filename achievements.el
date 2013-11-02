@@ -8,8 +8,8 @@
 ;;; Install:
 
 ;; A simple (require 'achievements).  However, currently it is also
-;; highly recommended to install the command-frequency package in
-;; order to get all the functionality.
+;; highly recommended to install the keyfreq or command-frequency
+;; package in order to get all the functionality.
 
 ;;; Commentary:
 
@@ -180,14 +180,31 @@ customize or .emacs (not yet implemented)."
   "Return the number of times any one of the commands was run.
 Right now this is checked it `command-frequency', but it is hoped
 that in the future there will be other methods."
-  (cond ((require 'command-frequency nil t)
+  (cond ((require 'keyfreq nil t)
+         (let ((table (copy-hash-table keyfreq-table))
+               (total 0))
+           ;; Merge with the values in .emacs.keyfreq file
+           (keyfreq-table-load table)
+           (maphash
+            (lambda (k v)
+              (when (memq (cdr k) command-list)
+                (setq total (+ total v))))
+            table)
+           total))
+        ((require 'command-frequency nil t)
          (let ((command-freq (cdr (command-frequency-list)))
                (total 0))
            (loop for com in command-freq
                  if (member (car com) command-list)
                  do (setq total (+ total (cdr com))))
            total))
-        (t 0)))
+        (t (let ((total 0))
+             (mapc
+              (lambda (x)
+                (when (memq (car x) command-list)
+                  (setq total (+ total 1))))
+              command-history)
+             total))))
 
 (defun achievements-command-was-run (command)
   "Return non-nil if COMMAND has been run.
