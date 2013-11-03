@@ -1,4 +1,4 @@
-;;; achievements.el --- achievements for emacs usage
+;;; achievements-functions.el --- achievements for emacs usage
 
 ;; Author: Ivan Andrus <darthandrus@gmail.com>
 ;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
@@ -84,12 +84,6 @@ This overwrites `achievements-list'."
   (add-hook 'kill-emacs-hook #'achievements-save-achievements)
   ;; Load the basic achievements
   (require 'basic-achievements))
-
-;; Set things up before we load any achievements files, otherwise the
-;; definitions will populate achievements-list instead of the saved
-;; values.
-;;;###autoload
-(achievements-init)
 
 ;;}}}
 ;;{{{ Defining achievements
@@ -357,6 +351,6 @@ symbol for a command which must be."
 
 ;;}}}
 
-(provide 'achievements)
+(provide 'achievements-functions)
 
-;;; achievements.el ends here
+;;; achievements-functions.el ends here

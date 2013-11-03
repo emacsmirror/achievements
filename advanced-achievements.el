@@ -26,6 +26,8 @@
 
 ;;; Code:
 
+(require 'achievements-functions)
+
 ;;{{{ Disabled functions
 
 (defachievement "Inception"

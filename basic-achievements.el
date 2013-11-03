@@ -12,6 +12,8 @@
 
 ;;; Code:
 
+(require 'achievements-functions)
+
 ;;{{{ meta
 
 (defachievement "Achiever"
