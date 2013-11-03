@@ -81,7 +81,9 @@ This overwrites `achievements-list'."
   "Initialize achievements package."
   (when (null achievements-list)
     (achievements-load-achievements))
-  (add-hook 'kill-emacs-hook #'achievements-save-achievements))
+  (add-hook 'kill-emacs-hook #'achievements-save-achievements)
+  ;; Load the basic achievements
+  (require 'basic-achievements))
 
 ;; Set things up before we load any achievements files, otherwise the
 ;; definitions will populate achievements-list instead of the saved
@@ -354,8 +356,6 @@ symbol for a command which must be."
     (remove-hook 'post-command-hook #'achievements-post-command-function)))
 
 ;;}}}
-
-(require 'basic-achievements)
 
 (provide 'achievements)
 
