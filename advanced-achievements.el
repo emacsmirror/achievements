@@ -71,6 +71,22 @@
   :command 'dired-find-alternate-file)
 
 ;;}}}
+;;{{{ Misc.
+
+(defachievement "Yes Man"
+  "You can't say no."
+  :predicate '(and (>= (length yes-or-no-p-history) 10)
+                   (every (lambda (x) (equal "yes" x)) yes-or-no-p-history)))
+
+(defachievement "Leaving Home"
+  "You have edited files outside your home directory."
+  :predicate '(and (getenv "HOME")
+                   (not (every
+                         (lambda (x) (or (string-match (concat "^" (regexp-quote (getenv "HOME"))) x)
+                                         (string-match (concat "^[~]/") x)))
+                         file-name-history))))
+
+;;}}}
 
 (provide 'advanced-achievements)
 
