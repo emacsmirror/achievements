@@ -367,6 +367,48 @@
   :command 'proced)
 
 ;;}}}
+;;{{{ Arrow keys
+
+(defun input-in-a-row (input val)
+  `(let ((in-a-row 0)
+         (success nil))
+     (mapc
+      (lambda (e)
+        (if (memq e ',input)
+            (if (>= (incf in-a-row) ,val) (setq success t))
+          (setq in-a-row 0)))
+      (recent-keys))
+     success))
+
+(defachievement "Archer"
+  "You use the arrow keys a lot."
+  :predicate (input-in-a-row '(right left up down) 5))
+
+(defachievement "William Tell"
+  "You use the arrow keys for almost everything."
+  :predicate (input-in-a-row '(right left up down) 20))
+
+
+(defvar achievements--arrow-keys-needing-replacements
+  '(right left up down))
+
+(defvar achievements--arrow-key-replacement-commands
+  (mapcar
+   (lambda (x) (lookup-key global-map (vector x)))
+   achievements--arrow-keys-needing-replacements))
+
+(defachievement "No arrows"
+  "You know the replacements for the arrow keys."
+  :post-command
+  (lambda ()
+    (when (and (memq this-command achievements--arrow-key-replacement-commands)
+               (not (memq last-input-event achievements--arrow-keys-needing-replacements)))
+      (setq achievements--arrow-key-replacement-commands
+            (delete this-command
+                    achievements--arrow-key-replacement-commands))
+      (equal 0 (length achievements--arrow-key-replacement-commands)))))
+
+;;}}}
 
 (provide 'basic-achievements)
 
