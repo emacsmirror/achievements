@@ -29,6 +29,9 @@
 (defvar achievements-list nil
   "List of all possible achievements.")
 
+(defvar achievements-post-command-list nil
+  "List of achievements that need to be checked on `post-command-hook'.")
+
 (defvar achievement-score 0
   "Score of all earned achievements.")
 
@@ -96,7 +99,7 @@ This overwrites `achievements-list'."
                          ;; &optional (predicate t)
                          &key
                          ;; slots
-                         points transient min-score predicate unlocks
+                         points transient min-score predicate unlocks post-command
                          ;; convenience
                          package variable command
                          &aux (predicate
@@ -112,6 +115,8 @@ This overwrites `achievements-list'."
                                    ,@(when command
                                        (list (list 'achievements-command-was-run
                                                    (list 'quote command))))
+                                   ,@(when post-command
+                                      (list nil))
                                    ;; TODO: allow functions here not just forms
                                    ,@(when predicate
                                        (list predicate))))))))
@@ -120,6 +125,7 @@ This overwrites `achievements-list'."
   description
   predicate ;; t if satisfied, nil if opted out, otherwise a function which should return non-nil on success
   transient ;; if non-nil then results won't be saved, but constantly re-evaluated.
+  post-command ;; a predicate that needs to be run in post-command-hook
   (points 5)
   (min-score 0)
   unlocks
@@ -240,6 +246,11 @@ symbol for a command which must be."
 ;;}}}
 ;;{{{ Display
 
+(defun achievement-earned-message (achievement)
+  "Display the message when an achievement is earned."
+  (message "You earned the %s achievement!"
+           (emacs-achievement-name achievement)))
+
 (defun achievements-update-score ()
   (let ((score 0)
         (total 0))
@@ -253,7 +264,7 @@ symbol for a command which must be."
           (unless (emacs-achievement-transient achievement)
             (when (and achievements-display-when-earned
                        (not (equal (emacs-achievement-predicate achievement) t)))
-              (message "You earned the %s achievement!" (emacs-achievement-name achievement)))
+              (achievement-earned-message achievement))
             (setf (emacs-achievement-predicate achievement) t)))))
     ;; Save the updated list of achievements
     (achievements-save-achievements)
@@ -303,15 +314,41 @@ symbol for a command which must be."
   :type 'numberp
   :group 'achievements)
 
+(defun achievements-setup-post-command-hook ()
+  "Add the appropriate achievements for the post-command-hook."
+  (setq achievements-post-command-list nil)
+  (dolist (achievement achievements-list)
+    (when (and (emacs-achievement-post-command achievement)
+               (not (eq t (emacs-achievement-predicate achievement))))
+      (add-to-list 'achievements-post-command-list achievement))))
+
+(defun achievements-post-command-function ()
+  "Check achievements on `post-command-hook'."
+  (flet ((remove (v) (setq achievements-post-command-list
+                           (delete v achievements-post-command-list))))
+    (dolist (achievement achievements-post-command-list)
+      (let ((pred (emacs-achievement-post-command achievement)))
+        (if (functionp pred)
+            (when (funcall pred)
+              (setf (emacs-achievement-predicate achievement) t)
+              (achievement-earned-message achievement)
+              (remove achievement))
+          (remove achievement))))))
+
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
   ;; The lighter is a trophy
   nil " 🏆" nil
   (if achievements-mode
-      (unless achievements-timer
-        (setq achievements-timer
-              (run-with-idle-timer achievements-idle-time t #'achievements-update-score)))
-    (setq achievements-timer (cancel-timer achievements-timer))))
+      (progn
+        (unless achievements-timer
+          (setq achievements-timer
+                (run-with-idle-timer achievements-idle-time
+                                     t #'achievements-update-score)))
+        (achievements-setup-post-command-hook)
+        (add-hook 'post-command-hook #'achievements-post-command-function))
+    (setq achievements-timer (cancel-timer achievements-timer))
+    (remove-hook 'post-command-hook #'achievements-post-command-function)))
 
 ;;}}}
 
