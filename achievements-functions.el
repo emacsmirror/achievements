@@ -250,7 +250,15 @@ symbol for a command which must be."
 (defun achievements-earned-message (achievement)
   "Display the message when an achievement is earned."
   (message "ACHIEVEMENT UNLOCKED: You've earned the `%s' achievement!"
-           (emacs-achievement-name achievement)))
+           (emacs-achievement-name achievement))
+  (with-current-buffer (get-buffer-create "*achievements-log*")
+    (goto-char (point-min))
+    (when (> (buffer-size) 0)
+      (insert "\n")
+      (goto-char (point-min)))
+    (insert (format "You've earned the `%s' achievement! [%s]"
+                    (emacs-achievement-name achievement)
+                    (emacs-achievement-description achievement)))))
 
 (defun achievements-update-score ()
   (let ((score 0)
