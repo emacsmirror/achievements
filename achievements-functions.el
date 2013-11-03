@@ -261,6 +261,8 @@ symbol for a command which must be."
                     (emacs-achievement-description achievement)))))
 
 (defun achievements-update-score ()
+  "Recalculate whether each achievement has been earned."
+  (message "Calculating achievements...")
   (let ((score 0)
         (total 0))
     (dolist (achievement achievements-list)
@@ -278,35 +280,112 @@ symbol for a command which must be."
     ;; Save the updated list of achievements
     (achievements-save-achievements)
     (setq achievements-total total)
-    (setq achievements-score score)))
+    (setq achievements-score score))
+  (message "Calculating achievements... done"))
 
 (defun achievements-earned-p (achievement)
   "Returns non-nil if the achievement is earned."
   (let ((pred (emacs-achievement-predicate achievement)))
     (or (eq pred t)
-        (and (listp pred)
+        (and (functionp pred)
              (funcall pred)))))
 
-;; TODO: Use `tabulated-list-mode' -- what package.el uses or ewoc
+(defun achievements-get-achievements-by-name (name)
+  "Return the achievement identified by NAME."
+  (let ((l achievements-list)
+        ret)
+    (while l
+      (when (equal name (emacs-achievement-name (car l)))
+        (setq ret (car l))
+        (setq l nil))
+      (setq l (cdr l)))
+    ret))
+
+;;}}}
+;;{{{ Achievements List
+
+(defun achievements-tabulated-list-entries ()
+  "Turn `achievements-list' into a list for `tabulated-list-entries'."
+  (loop for achievement in achievements-list
+        for pred = (emacs-achievement-predicate achievement)
+        if (and pred ;; Not disabled
+                (>= achievements-score
+                    (emacs-achievement-min-score achievement)))
+        collect (list (emacs-achievement-name achievement)
+                      (vector
+                       (cond ((eq pred nil) "✗")
+                             ((eq pred t) "✓")
+                             ((listp pred)
+                              (if (funcall pred) "✓" ""))
+                             (t "?"))
+                       (format "%s" (emacs-achievement-points achievement))
+                       (emacs-achievement-name achievement)
+                       (if (achievements-earned-p achievement)
+                           (emacs-achievement-description achievement)
+                         "")))))
+
+(defun achievements-disable ()
+  "Disable the current achievement.
+This expects to be called from `achievements-list-mode'."
+  (interactive)
+  (let* ((id (tabulated-list-get-id))
+         (achievement (achievements-get-achievements-by-name id)))
+    (when (and achievement
+               (y-or-n-p "Do you really want to disable this achievement? "))
+      (setf (emacs-achievement-predicate achievement) nil)
+      (revert-buffer))))
+
+(define-derived-mode achievements-list-mode tabulated-list-mode
+  "Achievements"
+  "Mode for display the list of achievements."
+  (setq tabulated-list-format
+        '[("E"            3 t . (:pad-right 0))
+          ("Pts"          3 t . (:pad-right 1 :right-align t))
+          ("Name"        30 t . (:pad-right 1))
+          ("Description" 20 t . (:pad-right 1))])
+  (add-hook 'tabulated-list-revert-hook #'achievements-update-score)
+  (setq tabulated-list-entries #'achievements-tabulated-list-entries)
+  (setq tabulated-list-padding 1)
+  (set (make-local-variable 'show-trailing-whitespace) nil)
+  ;; Maybe set `tabulated-list-printer'
+  ;; (setq tabulated-list-sort-key '("Name"))
+  (tabulated-list-init-header))
+
+(defvar achievements-list-mode-map
+  (let ((map (make-sparse-keymap))
+        (menu-map (make-sparse-keymap "Achievements")))
+    (set-keymap-parent map tabulated-list-mode-map)
+    (define-key map "d" 'achievements-disable)
+    (define-key map [menu-bar achievements-menu] (cons "Achievements" menu-map))
+    (define-key menu-map [mq]
+      '(menu-item "Quit" quit-window
+                  :help "Quit Viewing Achievements"))
+    (define-key menu-map [s1] '("--"))
+    (define-key menu-map [mn]
+      '(menu-item "Next" next-line
+                  :help "Next Line"))
+    (define-key menu-map [mp]
+      '(menu-item "Previous" previous-line
+                  :help "Previous Line"))
+    (define-key menu-map [s2] '("--"))
+    (define-key menu-map [md]
+      '(menu-item "Disable" achievements-disable
+                  :help "Disable an achievement. It won't show up in this list, and you can never earn it"))
+    (define-key menu-map [s3] '("--"))
+    (define-key menu-map [mg]
+      '(menu-item "Refresh list" revert-buffer
+                  :help "Recalculate this list"))
+    map)
+  "Local keymap for `achievements-list-mode' buffers.")
+
 ;;;###autoload
 (defun achievements-list-achievements ()
   "Display all achievements including whether they have been achieved."
   (interactive)
   (pop-to-buffer "*Achievements*")
-  (delete-region (point-min) (point-max))
+  (achievements-list-mode)
   (achievements-update-score)
-  (dolist (achievement achievements-list)
-    (let ((pred (emacs-achievement-predicate achievement)))
-      (when (>= achievements-score
-                (emacs-achievement-min-score achievement))
-        (insert (format "%s %20s | %s\n"
-                        (cond ((eq pred nil) ":-|")
-                              ((eq pred t) ":-)")
-                              ((listp pred)
-                               (if (funcall pred) ":-)" ":-("))
-                              (t ":-?"))
-                        (emacs-achievement-name achievement)
-                        (emacs-achievement-description achievement)))))))
+  (tabulated-list-print t))
 
 ;;}}}
 ;;{{{ Achievements Mode
