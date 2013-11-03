@@ -86,6 +86,7 @@ This overwrites `achievements-list'."
 ;; Set things up before we load any achievements files, otherwise the
 ;; definitions will populate achievements-list instead of the saved
 ;; values.
+;;;###autoload
 (achievements-init)
 
 ;;}}}
@@ -279,6 +280,7 @@ symbol for a command which must be."
              (funcall pred)))))
 
 ;; TODO: Use `tabulated-list-mode' -- what package.el uses or ewoc
+;;;###autoload
 (defun achievements-list-achievements ()
   "Display all achievements including whether they have been achieved."
   (interactive)
@@ -335,6 +337,7 @@ symbol for a command which must be."
               (remove achievement))
           (remove achievement))))))
 
+;;;###autoload
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
   ;; The lighter is a trophy
