@@ -177,7 +177,11 @@ customize or .emacs (not yet implemented)."
   (if (listp var)
       (equal (symbol-value (car var)) (cadr var))
     ;; it was set via customize etc.
-    ))
+    (or (and (symbol-value var)
+             (string-match "\\(-hook\\|-function\\)\\'" (symbol-name var)))
+        (and
+         (get var 'custom-type) (get var 'standard-value)
+         (not (equal (symbol-value var) (eval (car (get var 'standard-value)))))))))
 
 (defun achievements-num-times-commands-were-run (command-list)
   "Return the number of times any one of the commands was run.
