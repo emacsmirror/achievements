@@ -249,7 +249,7 @@ symbol for a command which must be."
 
 (defun achievements-earned-message (achievement)
   "Display the message when an achievement is earned."
-  (message "You earned the %s achievement!"
+  (message "ACHIEVEMENT UNLOCKED: You've earned the `%s' achievement!"
            (emacs-achievement-name achievement)))
 
 (defun achievements-update-score ()

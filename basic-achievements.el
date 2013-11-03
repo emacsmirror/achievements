@@ -52,8 +52,8 @@
 
 (defcommand-achievements
   "You learned new things by using `%s'."
-  ((help-for-help "First things first.")
-   (help-with-tutorial "Show me the way.") ;; Also one if finished the tutorial
+  ((help-for-help "First things first")
+   (help-with-tutorial "Show me the way") ;; Also one if finished the tutorial
    (info-emacs-manual "RTFM")
    (view-echo-area-messages "Log Auditor")
    (view-emacs-FAQ "FAQ")
@@ -184,7 +184,7 @@
   "You have installed and enjoyed `%s'."
   ((emstar "Um, Star?" )
    (fliptext-flip-region "Can you read upside down?")
-   (nethack "Hack, hack, hack.")
+   (nethack "Hack, hack, hack")
    (nyan-mode "Nyan, Nyan, Nyan"))
   :min-score 100)
 
