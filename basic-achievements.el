@@ -24,16 +24,16 @@
   "You have a fractional achievement score."
   ;; Note: This is meant to be the only one that has fractional score
   :points .5
-  :predicate '(/= achievement-score (round achievement-score)))
+  :predicate '(/= achievements-score (round achievements-score)))
 
 (defachievement "Unlocker"
   "You have earned over 50 points in Emacs achievements.  Not bad."
-  :predicate '(>= achievement-score 50)
+  :predicate '(>= achievements-score 50)
   :unlocks 'advanced-achievements)
 
 (defachievement "Over Achiever"
   "You have earned 500 points in Emacs achievements.  Don't you have some real work to do?"
-  :predicate '(>= achievement-score 500))
+  :predicate '(>= achievements-score 500))
 
 (defachievement "Cheater"
   "You have earned all Emacs achievements.  Actually that's impossible."

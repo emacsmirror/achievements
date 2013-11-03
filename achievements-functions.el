@@ -32,10 +32,10 @@
 (defvar achievements-post-command-list nil
   "List of achievements that need to be checked on `post-command-hook'.")
 
-(defvar achievement-score 0
+(defvar achievements-score 0
   "Score of all earned achievements.")
 
-(defvar achievement-total 0
+(defvar achievements-total 0
   "Highest possible score of all unlocked achievements.")
 
 (defcustom achievements-debug nil
@@ -243,7 +243,7 @@ symbol for a command which must be."
 ;;}}}
 ;;{{{ Display
 
-(defun achievement-earned-message (achievement)
+(defun achievements-earned-message (achievement)
   "Display the message when an achievement is earned."
   (message "You earned the %s achievement!"
            (emacs-achievement-name achievement)))
@@ -261,12 +261,12 @@ symbol for a command which must be."
           (unless (emacs-achievement-transient achievement)
             (when (and achievements-display-when-earned
                        (not (equal (emacs-achievement-predicate achievement) t)))
-              (achievement-earned-message achievement))
+              (achievements-earned-message achievement))
             (setf (emacs-achievement-predicate achievement) t)))))
     ;; Save the updated list of achievements
     (achievements-save-achievements)
-    (setq achievement-total total)
-    (setq achievement-score score)))
+    (setq achievements-total total)
+    (setq achievements-score score)))
 
 (defun achievements-earned-p (achievement)
   "Returns non-nil if the achievement is earned."
@@ -285,7 +285,7 @@ symbol for a command which must be."
   (achievements-update-score)
   (dolist (achievement achievements-list)
     (let ((pred (emacs-achievement-predicate achievement)))
-      (when (>= achievement-score
+      (when (>= achievements-score
                 (emacs-achievement-min-score achievement))
         (insert (format "%s %20s | %s\n"
                         (cond ((eq pred nil) ":-|")
@@ -329,7 +329,7 @@ symbol for a command which must be."
         (if (functionp pred)
             (when (funcall pred)
               (setf (emacs-achievement-predicate achievement) t)
-              (achievement-earned-message achievement)
+              (achievements-earned-message achievement)
               (remove achievement))
           (remove achievement))))))
 
