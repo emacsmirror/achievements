@@ -88,7 +88,44 @@
                                          (string-match (concat "^[~]/") x)))
                          file-name-history))))
 
+(defachievement "The Examined Life"
+  "You have command logging enabled."
+  :command 'keyfreq-show)
+
+(defachievement "Playing it Safe"
+  "Your .emacs is under version control."
+  :predicate '(and (require 'vc nil t)
+                   (vc-backend user-init-file)))
+
+(defachievement "Arbitrator"
+  "You have used smerge-mode to resolve conflicts."
+  :command '(smerge-keep-all smerge-keep-base smerge-keep-current
+             smerge-keep-mine smerge-keep-other))
+
+(defachievement "Surfs up"
+  "You use Emacs for surfing the web"
+  :command '(eww eww-browse-url eww-open-file
+             w3 w3-fetch w3-open-local w3-quit
+             w3m w3m-browse-url w3m-find-file))
+
 ;;}}}
+;;{{{ Modes
+
+(defachievement "Polyglot"
+  "You have used over 20 major-modes at once."
+  :predicate '(<= 20
+                  (length (let ((modes nil))
+                            (loop for buf in (buffer-list)
+                                  do (add-to-list 'modes (buffer-local-value 'major-mode buf)))
+                            modes))))
+
+(defachievement "Org-anizer"
+  "You have used `org-mode'."
+  :command 'org-mode
+  :unlocks 'org-achievements)
+
+;;}}}
+
 
 (provide 'advanced-achievements)
 
