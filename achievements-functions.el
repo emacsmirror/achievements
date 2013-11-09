@@ -5,17 +5,6 @@
 ;; Created: 2012-10-07
 ;; Keywords: games
 
-;;; Install:
-
-;; A simple (require 'achievements).  However, currently it is also
-;; highly recommended to install the keyfreq or command-frequency
-;; package in order to get all the functionality.
-
-;;; Commentary:
-
-;; Running `achievements-list-achievements' will show a list of all
-;; unlocked achievements.
-
 ;;; Code:
 
 ;; TODO: easy way to show a random unearned achievement, perhaps on an idle timer
@@ -288,7 +277,11 @@ symbol for a command which must be."
   (let ((pred (emacs-achievement-predicate achievement)))
     (or (eq pred t)
         (and (functionp pred)
-             (funcall pred)))))
+             (condition-case err
+                 (funcall pred)
+               ('error
+                (message "Error while checking if you have earned the %s achievement"
+                         (emacs-achievement-name achievement))))))))
 
 (defun achievements-get-achievements-by-name (name)
   "Return the achievement identified by NAME."
@@ -313,11 +306,9 @@ symbol for a command which must be."
                     (emacs-achievement-min-score achievement)))
         collect (list (emacs-achievement-name achievement)
                       (vector
-                       (cond ((eq pred nil) "✗")
-                             ((eq pred t) "✓")
-                             ((listp pred)
-                              (if (funcall pred) "✓" ""))
-                             (t "?"))
+                       (cond ((achievements-earned-p achievement) "✓")
+                             ((eq pred nil) "✗")
+                             (t ""))
                        (format "%s" (emacs-achievement-points achievement))
                        (emacs-achievement-name achievement)
                        (if (achievements-earned-p achievement)
@@ -356,6 +347,7 @@ This expects to be called from `achievements-list-mode'."
         (menu-map (make-sparse-keymap "Achievements")))
     (set-keymap-parent map tabulated-list-mode-map)
     (define-key map "d" 'achievements-disable)
+    ;; (define-key map "t" 'achievements-toggle-show-disabled)
     (define-key map [menu-bar achievements-menu] (cons "Achievements" menu-map))
     (define-key menu-map [mq]
       '(menu-item "Quit" quit-window
