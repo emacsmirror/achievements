@@ -20,13 +20,11 @@
 
 ;;; Code:
 
-
 (require 'achievements-functions)
 
 ;; Set things up before we load any achievements files, otherwise the
 ;; definitions will populate achievements-list instead of the saved
 ;; values.
-;;;###autoload
 (achievements-init)
 
 (provide 'achievements)
