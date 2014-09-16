@@ -71,6 +71,11 @@ This overwrites `achievements-list'."
   (when (null achievements-list)
     (achievements-load-achievements))
   (add-hook 'kill-emacs-hook #'achievements-save-achievements)
+  ;; Make a fancy lighter (a trophy) if possible
+  (when (and (fboundp 'internal-char-font)
+             (internal-char-font nil ?\🏆)
+             (assq 'achievements-mode minor-mode-alist))
+    (setcar (cdr (assq 'achievements-mode minor-mode-alist)) " 🏆"))
   ;; Load the basic achievements
   (require 'basic-achievements))
 
@@ -418,8 +423,7 @@ This expects to be called from `achievements-list-mode'."
 ;;;###autoload (autoload 'achievements-mode "achievements" nil t)
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
-  ;; The lighter is a trophy
-  nil " 🏆" nil
+  nil " Achieve" nil
   (if achievements-mode
       (progn
         (unless achievements-timer
