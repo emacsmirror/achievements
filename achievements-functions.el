@@ -37,7 +37,6 @@
 (defun achievements-save-achievements ()
   "Saves achievements to a super secret file."
   (interactive)
-  (require 'achievements)
   (let ((print-level nil)
         (print-length nil))
     (with-temp-file achievements-file
@@ -47,7 +46,6 @@
   "Load achievements from a super secret file.
 This overwrites `achievements-list'."
   (interactive)
-  (require 'achievements)
   (setq achievements-list
         (when (file-exists-p achievements-file)
           ;; Load sexp
@@ -67,7 +65,7 @@ This overwrites `achievements-list'."
             ll))))
 
 ;; Set up hooks and initialization
-;;;###autoload
+;;;###autoload (autoload 'achievements-init "achievements" nil t)
 (defun achievements-init ()
   "Initialize achievements package."
   (when (null achievements-list)
@@ -371,11 +369,10 @@ This expects to be called from `achievements-list-mode'."
     map)
   "Local keymap for `achievements-list-mode' buffers.")
 
-;;;###autoload
+;;;###autoload (autoload 'achievements-list-achievements "achievements" nil t)
 (defun achievements-list-achievements ()
   "Display all achievements including whether they have been achieved."
   (interactive)
-  (require 'achievements)
   (pop-to-buffer "*Achievements*")
   (achievements-list-mode)
   (achievements-update-score)
@@ -418,12 +415,11 @@ This expects to be called from `achievements-list-mode'."
               (remove achievement))
           (remove achievement))))))
 
-;;;###autoload
+;;;###autoload (autoload 'achievements-mode "achievements" nil t)
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
   ;; The lighter is a trophy
   nil " 🏆" nil
-  (require 'achievements)
   (if achievements-mode
       (progn
         (unless achievements-timer
