@@ -179,8 +179,8 @@ customize or .emacs (not yet implemented)."
 
 (defun achievements-num-times-commands-were-run (command-list)
   "Return the number of times any one of the commands was run.
-Right now this is checked it `command-frequency', but it is hoped
-that in the future there will be other methods."
+This uses `keyfreq', or `command-frequency', or `command-history'
+depending on what is installed."
   (cond ((require 'keyfreq nil t)
          (let ((table (copy-hash-table keyfreq-table))
                (total 0))
