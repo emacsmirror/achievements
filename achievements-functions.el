@@ -428,6 +428,7 @@ This expects to be called from `achievements-list-mode'."
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
   nil " Achieve" nil
+  :global t
   (if achievements-mode
       (progn
         (unless achievements-timer
