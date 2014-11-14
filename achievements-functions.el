@@ -27,9 +27,13 @@
 (defvar achievements-total 0
   "Highest possible score of all unlocked achievements.")
 
+(defgroup achievements nil
+  "A set of (hopefully) fun achievements to learn Emacs."
+  :group 'games)
+
 (defcustom achievements-debug nil
   "If non-nil, various debug messages will be printed regarding achievements activity."
-  :type 'bool
+  :type 'boolean
   :group 'achievements)
 
 ;;{{{ Persistence & startup
@@ -391,12 +395,12 @@ This expects to be called from `achievements-list-mode'."
 
 (defcustom achievements-display-when-earned t
   "If non-nil, various debug messages will be printed regarding achievements activity."
-  :type 'bool
+  :type 'boolean
   :group 'achievements)
 
 (defcustom achievements-idle-time 10
   "Number of seconds for Emacs to be idle before checking if achievements have been earned."
-  :type 'numberp
+  :type 'number
   :group 'achievements)
 
 (defun achievements-setup-post-command-hook ()
