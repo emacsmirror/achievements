@@ -1,5 +1,6 @@
 Achievements
 ============
+[![MELPA](http://melpa.org/packages/achievements-badge.svg)](http://melpa.org/#/achievements)
 
 Purpose
 -------
