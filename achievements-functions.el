@@ -259,7 +259,6 @@ symbol for a command which must be."
 
 (defun achievements-update-score ()
   "Recalculate whether each achievement has been earned."
-  (message "Calculating achievements...")
   (let ((score 0)
         (total 0))
     (dolist (achievement achievements-list)
@@ -277,8 +276,7 @@ symbol for a command which must be."
     ;; Save the updated list of achievements
     (achievements-save-achievements)
     (setq achievements-total total)
-    (setq achievements-score score))
-  (message "Calculating achievements... done"))
+    (setq achievements-score score)))
 
 (defun achievements-earned-p (achievement)
   "Returns non-nil if the achievement is earned."
