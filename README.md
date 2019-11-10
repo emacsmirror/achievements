@@ -79,5 +79,5 @@ Contributing
 ------------
 
 If you have an idea for an achievement, or a bug that needs to be fixed, head
-over to [the repository](https://bitbucket.org/gvol/emacs-achievements/) and
+over to [the repository](https://gitlab.org/gvol/emacs-achievements/) and
 open a pull request or an issue.
