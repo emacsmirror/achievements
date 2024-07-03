@@ -465,4 +465,10 @@ tar zip etc.
 ;; VM (View Mail), another full-featured email client
 ;; Wanderlust, a versatile email and news client
 
+;; Magit
+;; LSP
+;; completion frameworks
+;; avy/jump/etc.
+;; BBDB
+
 ;;}}}
