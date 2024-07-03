@@ -310,11 +310,15 @@
 
 ;; TODO: need list of old maintainers, as well as for XEmacs
 (defachievement "A Well Oiled Machine"
-  "You help maintain Emacs."
+  "You have helped maintain Emacs."
   :predicate '(member user-mail-address
                       '("rms@gnu.org"
                         "cyd@gnu.org"
-                        "monnier@iro.umontreal.ca"))
+                        "monnier@iro.umontreal.ca"
+                        "eliz@gnu.org"
+                        "johnw@gnu.org"
+                        "larsi@gnus.org"
+                        "acorallo@gnu.org"))
   :points 50)
 
 ;;}}}
