@@ -1,4 +1,4 @@
-;;; basic-achievements.el --- Some basic achievements
+;;; basic-achievements.el --- Some basic achievements -*- lexical-binding: t -*-
 
 ;; Author: Ivan Andrus <darthandrus@gmail.com>
 ;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
@@ -151,6 +151,7 @@
 ;;}}}
 ;;{{{ Fun and Games
 
+(declare-function yow "yow")
 (defcommand-achievements
   "You have enjoyed `%s'."
   ((5x5 "Twenty Five")
@@ -180,6 +181,10 @@
 
 ;; These probably need packages.  Also check out
 ;; http://www.emacswiki.org/emacs/CategoryGames
+(declare-function emstar "emstar")
+(declare-function fliptext-flip-region "fliptext")
+(declare-function nethack "nethack")
+(declare-function nyan-mode "nyan-mode")
 (defcommand-achievements
   "You have installed and enjoyed `%s'."
   ((emstar "Um, Star?" )

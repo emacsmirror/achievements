@@ -1,4 +1,4 @@
-;;; advanced-achievements.el --- More advanced achievements
+;;; advanced-achievements.el --- More advanced achievements -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2012  Ivan Andrus
 
@@ -41,12 +41,12 @@
 
 (defachievement "Forbidden Fruits"
   "You have used all disabled commands."
-  :command (loop for s being the symbols
+  :command (cl-loop for s being the symbols
                  when (get s 'disabled) collect s))
 
 (defachievement "Enabler"
   "You have enabled all commands."
-  :predicate '(= 0 (length (loop for s being the symbols
+  :predicate '(= 0 (length (cl-loop for s being the symbols
                                  when (get s 'disabled) collect s))))
 
 (defachievement "Case Changer"
@@ -116,7 +116,7 @@
   "You have used over 20 major-modes at once."
   :predicate '(<= 20
                   (length (let ((modes nil))
-                            (loop for buf in (buffer-list)
+                            (cl-loop for buf in (buffer-list)
                                   do (add-to-list 'modes (buffer-local-value 'major-mode buf)))
                             modes))))
 

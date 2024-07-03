@@ -1,4 +1,4 @@
-;;; achievements-functions.el --- achievements for emacs usage
+;;; achievements-functions.el --- achievements for emacs usage -*- lexical-binding: t -*-
 
 ;; Author: Ivan Andrus <darthandrus@gmail.com>
 ;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
@@ -32,7 +32,7 @@
   :group 'games)
 
 (defcustom achievements-debug nil
-  "If non-nil, various debug messages will be printed regarding achievements activity."
+  "If non-nil, print debug messages regarding achievements activity."
   :type 'boolean
   :group 'achievements)
 
@@ -86,7 +86,7 @@ This overwrites `achievements-list'."
 ;;}}}
 ;;{{{ Defining achievements
 
-(defstruct
+(cl-defstruct
     (emacs-achievement
      (:constructor nil)
      (:constructor make-achievement
@@ -140,7 +140,7 @@ This overwrites `achievements-list'."
 
 (defmacro defcommand-achievements (format-str body &rest arguments)
   (cons 'progn
-        (loop for achiev in body
+        (cl-loop for achiev in body
               collect (append
                        (list 'defachievement
                              (cadr achiev)
@@ -152,7 +152,7 @@ This overwrites `achievements-list'."
 
 (defmacro defvalue-achievements (var format-str body &rest arguments)
   (cons 'progn
-        (loop for achiev in body
+        (cl-loop for achiev in body
               collect (append
                        (list 'defachievement
                              (car achiev)
@@ -181,6 +181,7 @@ customize or .emacs (not yet implemented)."
          (get var 'custom-type) (get var 'standard-value)
          (not (equal (symbol-value var) (eval (car (get var 'standard-value)))))))))
 
+(declare-function command-frequency-list "command-frequency")
 (defun achievements-num-times-commands-were-run (command-list)
   "Return the number of times any one of the commands was run.
 This uses `keyfreq', or `command-frequency', or `command-history'
@@ -199,7 +200,7 @@ depending on what is installed."
         ((require 'command-frequency nil t)
          (let ((command-freq (cdr (command-frequency-list)))
                (total 0))
-           (loop for com in command-freq
+           (cl-loop for com in command-freq
                  if (member (car com) command-list)
                  do (setq total (+ total (cdr com))))
            total))
@@ -263,9 +264,9 @@ symbol for a command which must be."
         (total 0))
     (dolist (achievement achievements-list)
       (let ((points (emacs-achievement-points achievement)))
-        (incf total points)
+        (cl-incf total points)
         (when (achievements-earned-p achievement)
-          (incf score points)
+          (cl-incf score points)
           (when (emacs-achievement-unlocks achievement)
             (require (emacs-achievement-unlocks achievement) nil t))
           (unless (emacs-achievement-transient achievement)
@@ -285,9 +286,10 @@ symbol for a command which must be."
         (and (functionp pred)
              (condition-case err
                  (funcall pred)
-               ('error
-                (message "Error while checking if you have earned the %s achievement"
-                         (emacs-achievement-name achievement))))))))
+               (error
+                (message "Error while checking if you have earned the %s achievement: %s"
+                         (emacs-achievement-name achievement)
+                         err)))))))
 
 (defun achievements-get-achievements-by-name (name)
   "Return the achievement identified by NAME."
@@ -305,7 +307,7 @@ symbol for a command which must be."
 
 (defun achievements-tabulated-list-entries ()
   "Turn `achievements-list' into a list for `tabulated-list-entries'."
-  (loop for achievement in achievements-list
+  (cl-loop for achievement in achievements-list
         for pred = (emacs-achievement-predicate achievement)
         if (and pred ;; Not disabled
                 (>= achievements-score
@@ -392,12 +394,12 @@ This expects to be called from `achievements-list-mode'."
   "Holds the idle timer.")
 
 (defcustom achievements-display-when-earned t
-  "If non-nil, various debug messages will be printed regarding achievements activity."
+  "If non-nil, print messages when achievements are earned."
   :type 'boolean
   :group 'achievements)
 
 (defcustom achievements-idle-time 10
-  "Number of seconds for Emacs to be idle before checking if achievements have been earned."
+  "Seconds for Emacs to be idle before checking if achievements have been earned."
   :type 'number
   :group 'achievements)
 
@@ -411,7 +413,7 @@ This expects to be called from `achievements-list-mode'."
 
 (defun achievements-post-command-function ()
   "Check achievements on `post-command-hook'."
-  (flet ((remove (v) (setq achievements-post-command-list
+  (cl-flet ((remove (v) (setq achievements-post-command-list
                            (delete v achievements-post-command-list))))
     (dolist (achievement achievements-post-command-list)
       (let ((pred (emacs-achievement-post-command achievement)))
@@ -425,7 +427,9 @@ This expects to be called from `achievements-list-mode'."
 ;;;###autoload (autoload 'achievements-mode "achievements" nil t)
 (define-minor-mode achievements-mode
   "Turns on automatic earning of achievements when idle."
-  nil " Achieve" nil
+  :init-value nil
+  :lighter " Achieve"
+  :keymap nil
   :global t
   (if achievements-mode
       (progn

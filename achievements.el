@@ -1,4 +1,4 @@
-;;; achievements.el --- achievements for emacs usage
+;;; achievements.el --- achievements for emacs usage -*- lexical-binding: t -*-
 
 ;; Author: Ivan Andrus <darthandrus@gmail.com>
 ;; Maintainer: Ivan Andrus <darthandrus@gmail.com>
