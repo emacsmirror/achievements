@@ -44,7 +44,7 @@
   (let ((print-level nil)
         (print-length nil))
     (with-temp-file achievements-file
-      (prin1 achievements-list (current-buffer)))))
+      (pp achievements-list (current-buffer)))))
 
 (defun achievements-load-achievements ()
   "Load achievements from a super secret file.
