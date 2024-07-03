@@ -37,7 +37,7 @@
 
 (defachievement "Narrow minded"
   "You have used narrowing."
-  :command '(narrow-to-region narrow-to-page))
+  :command '((narrow-to-region narrow-to-page narrow-to-defun)))
 
 (defachievement "Forbidden Fruits"
   "You have used all disabled commands."
@@ -100,14 +100,12 @@
 
 (defachievement "Arbitrator"
   "You have used smerge-mode to resolve conflicts."
-  :command '(smerge-keep-all smerge-keep-base smerge-keep-current
-             smerge-keep-mine smerge-keep-other))
+  :command '((smerge-keep-all smerge-keep-base smerge-keep-current
+             smerge-keep-mine smerge-keep-other)))
 
 (defachievement "Surfs up"
   "You use Emacs for surfing the web"
-  :command '(eww eww-browse-url eww-open-file
-             w3 w3-fetch w3-open-local w3-quit
-             w3m w3m-browse-url w3m-find-file))
+  :command '((eww eww-browse-url eww-open-file)))
 
 ;;}}}
 ;;{{{ Modes

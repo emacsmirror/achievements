@@ -155,7 +155,9 @@
 (defcommand-achievements
   "You have enjoyed `%s'."
   ((5x5 "Twenty Five")
-   (animate "The Future of Pixar")
+   (((animate-string
+     animate-sequence
+     animate-birthday-present)) "The Future of Pixar")
    (artist-mode "Van Gogh")
    (blackbox "Hide and Seek")
    (bubbles "Blubb blubb")
@@ -363,11 +365,11 @@
 
 (defachievement "The Ol' Switcheroo"
   "You've switched to another buffer"
-  :command '(switch-to-buffer ido-switch-buffer))
+  :command '((switch-to-buffer ido-switch-buffer)))
 
 (defachievement "Buffer, buffers, everywhere"
   "You've seen all the buffers that can be seen."
-  :command '(list-buffers ibuffer))
+  :command '((list-buffers ibuffer)))
 
 (defachievement "Top o' the morning"
   "You've used Emacs as a replacement for top."

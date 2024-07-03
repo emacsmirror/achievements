@@ -215,33 +215,33 @@ depending on what is installed."
 (defun achievements-command-was-run (command)
   "Return non-nil if COMMAND has been run.
 It can be a single command form or list of command forms.
-If it's a list of forms, then all must be run.
 Each form has one of the forms
+
  COMMAND -- must be run once
- (CMD1 CMD2 ...) -- any can be run
- (COMMAND . COUNT) -- must be run COUNT times
- ((CMD1 CMD2 ...) . COUNT) -- must be run COUNT times
-symbol for a command which must be."
-  (let (command-list)
-    (cond
-     ;; A symbol
-     ((symbolp command)
-      (>= (achievements-num-times-commands-were-run (list command))
-          1))
-     ;; cdr is a number
-     ((numberp (cdr command))
-      (>= (achievements-num-times-commands-were-run
-           (if (listp (car command)) (car command) (list (car command))))
-          (cdr command)))
-     ;; A list of commands that are AND-ed
-     ((or (symbolp (car-safe command))
-          (numberp (cdr-safe (car-safe command))))
-      (every 'achievements-command-was-run command))
-     ;; Otherwise it's a list of commands, any of which could be run
-     (t
-      (>= (achievements-num-times-commands-were-run
-           (car command))
-          1)))))
+ (CMD1 CMD2 ...) -- all must be run
+ ((CMD1 CMD2 ...)) -- any can be run
+ (COMMAND . COUNT) -- must be run at least COUNT times
+ ((CMD1 CMD2 ...) . COUNT) -- all must be run COUNT times
+ (((CMD1 CMD2 ...)) . COUNT) -- any must be run COUNT times"
+  (cond
+   ;; A symbol
+   ((symbolp command)
+    (>= (achievements-num-times-commands-were-run (list command))
+        1))
+   ;; cdr is a number
+   ((numberp (cdr command))
+    (>= (achievements-num-times-commands-were-run
+         (if (listp (car command)) (car command) (list (car command))))
+        (cdr command)))
+   ;; A list of commands that are AND-ed
+   ((or (symbolp (car-safe command))
+        (numberp (cdr-safe (car-safe command))))
+    (cl-every 'achievements-command-was-run command))
+   ;; Otherwise it's a list of commands, any of which could be run
+   (t
+    (>= (achievements-num-times-commands-were-run
+         (car command))
+        1))))
 ;;}}}
 ;;{{{ Display
 
